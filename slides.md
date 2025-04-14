@@ -128,7 +128,7 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
   - 在组件面板中：
     - 拖放 Chat Input 组件到画布，用于接收用户输入。
     - 拖放 Prompt 组件，设置提示模板，例如：
-    - 你是一个友好的助手，请根据用户输入回答问题：{user_input}
+      - 你是一个友好的助手，请根据用户输入回答问题：{user_input}
     - 拖放 OpenAI 组件，配置 API 密钥（需提前获取 OpenAI API Key）。
   - 连接组件：
     - 将 Chat Input 的输出连接到 Prompt 的 user_input 输入。
@@ -309,7 +309,7 @@ docker pull pgvector/pgvector:pg17
 - run container
 
 ```sh
-docker run --name pgvector-db -e POSTGRES_PASSWORD=mysecretpassword --shm-size=1g -d my-postgres-pgvector
+docker run --name pgvector-db -e POSTGRES_PASSWORD=pgvector --shm-size=1g -p 5433:5432 -d pgvector
 ```
 
 - 进入 container
