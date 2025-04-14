@@ -1,3 +1,13 @@
+---
+theme: seriph
+background: https://cover.sli.dev
+class: text-center
+drawings:
+  persist: false
+transition: slide-left
+mdc: true
+
+---
 
 # 探索 Langflow：从入门到构建 AI 知识库
 
@@ -28,8 +38,10 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
 **环境要求**：
 
 - Python 3.10 - 3.13
-- pip 包管理器
-- OpenAI API 密钥（用于 LLM 和嵌入）
+- pip 包管理器 或者 uv(https://github.com/astral-sh/uv)
+- OpenAI（OpenAI Compatible） API 密钥（用于 Chat 和 Embedding ）
+
+---
 
 **安装步骤**：
 
@@ -43,9 +55,13 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
 
   2. 使用 pip 安装 Langflow：
 
-      ```bash
-      pip install langflow
-      ```
+    ```bash
+    pip install langflow
+    ```
+
+    ```bash
+    uv pip install langflow # 使用 uv 安装
+    ```
 
 - 启动 Langflow 服务：
   
@@ -53,14 +69,15 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
     python -m langflow run
     ```
 
+    ```bash
+    uv run langflow run # 使用 uv 安装可以使用 uv 启动
+    ```
+
     打开浏览器，访问 http://localhost:7860，即可进入 Langflow 的可视化界面。
 
 ---
 
 ### 2.2 Docker 部署
-
-Docker 提供了一种快速部署的方式，适合生产环境或跨平台使用。
-步骤：
 
 - 确保已安装 Docker 和 Docker Compose。
     创建 docker-compose.yml 文件：
@@ -139,8 +156,8 @@ RAG（检索增强生成）是 Langflow 的核心优势之一，它能让 AI 从
   - 添加组件：
     - File Loader：上传你的 PDF 文件。
     - Split Text：将文档拆分为小块，设置 chunk 大小为 1000 字符。
-    - OpenAI Embeddings：生成文本嵌入向量，需配置 OpenAI API 密钥。
-    - Astra DB Vector Store：存储嵌入向量，需提供 Astra DB 的连接信息（可在 DataStax 注册免费账户）。
+    - OpenAI  Embedding s：生成文本 Embedding 向量，需配置 OpenAI API 密钥。
+    - Astra DB Vector Store：存储 Embedding 向量，需提供 Astra DB 的连接信息（可在 DataStax 注册免费账户）。
     - Vector Search：用于检索相关文档片段。
     - Prompt：设置提示模板，例如：
 
@@ -153,7 +170,7 @@ RAG（检索增强生成）是 Langflow 的核心优势之一，它能让 AI 从
     - OpenAI：生成最终回答。
     - Chat Input 和 Chat Output：用于用户交互。
   - 连接组件：
-    - File Loader → Split Text → OpenAI Embeddings → Astra DB Vector Store。
+    - File Loader → Split Text → OpenAI  Embedding s → Astra DB Vector Store。
     - Chat Input → Vector Search（user_question 输入）。
     - Astra DB Vector Store → Vector Search（context 输入）。
     - Vector Search → Prompt（context 输入）。
@@ -166,7 +183,7 @@ RAG（检索增强生成）是 Langflow 的核心优势之一，它能让 AI 从
       - 通过这个 RAG 流程，机器人能够从 PDF 中提取关键信息并生成准确回答。例如，如果 PDF 是公司手册，机器人可以回答关于公司历史、产品或政策的问题。
     - 提示：
       - 确保向量数据库配置正确，Astra DB 提供了便捷的免费试用。
-      - 调整 chunk 大小和嵌入模型可优化检索效果。
+      - 调整 chunk 大小和 Embedding 模型可优化检索效果。
 
 ---
 
@@ -178,7 +195,7 @@ RAG（检索增强生成）是 Langflow 的核心优势之一，它能让 AI 从
 graph LR
     A[数据源] --> B[数据预处理]
     B --> C[文本分块]
-    C --> D[计算Embedding]
+    C --> D[计算 Embedding ]
     D --> E[生成向量存储至向量数据库]
 ```
 
@@ -186,7 +203,7 @@ graph LR
 
 ```mermaid
 graph LR
-    A[用户提问] --> B[提问Embedding]
+    A[用户提问] --> B[提问 Embedding ]
     B --> C[向量检索]
     C --> D{相似性计算}
     D --> E[检索相关信息]
@@ -212,8 +229,8 @@ graph LR
     - File Loader：上传 PDF 和 TXT 文件。
     - Web Loader：输入公司官网 URL，抓取网页内容。
     - Split Text：将所有数据拆分为 chunk（chunk 大小 1000，overlap 200）。
-    - OpenAI Embeddings：生成嵌入向量。
-    - Astra DB Vector Store：存储所有嵌入向量。
+    - OpenAI  Embedding s：生成 Embedding 向量。
+    - Astra DB Vector Store：存储所有 Embedding 向量。
   - 构建检索与生成：
     - Chat Input：接收用户问题。
     - Vector Search：从 Astra DB 中检索相关 chunk，设置 top-k=5。
@@ -227,7 +244,7 @@ graph LR
   - 添加 Langfuse 组件，配置环境变量（参考 Langfuse 文档）。
   - 连接 Langfuse 到 OpenAI 组件，记录每步推理过程。
   - 连接与运行：
-    - File Loader 和 Web Loader → Split Text → OpenAI Embeddings → Astra DB Vector Store。
+    - File Loader 和 Web Loader → Split Text → OpenAI  Embedding s → Astra DB Vector Store。
     - Chat Input → Vector Search → Prompt（user_question）。
     - Astra DB Vector Store → Vector Search → Prompt（context）。
     - Prompt → OpenAI → Langfuse → Chat Output。
@@ -239,7 +256,7 @@ graph LR
     “如何联系客服？”（来自 TXT）
     机器人将综合多源信息生成准确回答。
 - 效果：
-    这个知识库能够处理多种格式的数据，回答跨文档的复杂问题。例如，当问及“公司产品与福利的关系”时，机器人可以结合网页的产品介绍和 PDF 的福利政策，生成连贯的回答。
+    知识库能够处理多种格式的数据，回答跨文档的复杂问题。例如，当问及“公司产品与福利的关系”时，机器人可以结合网页的产品介绍和 PDF 的福利政策，生成连贯的回答。
 - 进阶优化：
   - 多智能体：引入 Langflow 的 Agent 组件，分配任务给不同智能体（如检索、总结、生成）。
   - 提示优化：调整提示模板，减少幻觉（hallucination）。
@@ -254,13 +271,63 @@ graph LR
   - 企业应用：通过 API 和 Kubernetes 部署，Langflow 可无缝嵌入企业流程。
   - 社区贡献：作为开源项目，欢迎开发者参与，共同完善工具。
 - 建议：
-    初学者可从简单流程开始，熟悉组件逻辑。
-    进阶用户可尝试多智能体和复杂 RAG 优化。
-    关注 Langflow GitHub（https://github.com/langflow-ai/langflow）获取最新更新。
-    希望这篇文章能为你的 Langflow 之旅提供启发！快去动手实践，构建属于你的 AI 应用吧！
+  - 初学者可从简单流程开始，熟悉组件逻辑。
+  - 进阶用户可尝试多智能体和复杂 RAG 优化。
+  - 关注 Langflow GitHub（https://github.com/langflow-ai/langflow）获取最新更新。
+  - 希望这篇文章能为你的 Langflow 之旅提供启发！快去动手实践，构建属于你的 AI 应用吧！
+- 参考资料：
+  - Langflow 官方文档：https://docs.langflow.org
+  - Langflow GitHub：https://github.com/langflow-ai/langflow
+  - DataStax Astra DB：https://www.datastax.com
+  - Langfuse 集成指南：https://langfuse.com
 
-参考资料：
-    Langflow 官方文档：https://docs.langflow.org
-    Langflow GitHub：https://github.com/langflow-ai/langflow
-    DataStax Astra DB：https://www.datastax.com
-    Langfuse 集成指南：https://langfuse.com
+---
+
+## 附 pip-mirror
+
+```conf
+; pip.conf
+[global]
+timeout = 6000
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+extra-index-url = https://mirrors.aliyun.com/pypi/simple
+trusted-host = pypi.tuna.tsinghua.edu.cn
+```
+
+---
+
+## pgvector
+
+- pull image
+
+```sh
+docker pull pgvector/pgvector:pg17
+```
+
+- run container
+
+```sh
+docker run --name pgvector-db -e POSTGRES_PASSWORD=mysecretpassword --shm-size=1g -d my-postgres-pgvector
+```
+
+- 进入 container
+
+```sh
+docker exec -it pgvector-db psql -U postgres
+```
+
+- 启动 vector extension
+
+```sql
+CREATE EXTENSION vector;
+```
+
+- 测试
+
+```sql
+CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3));
+
+INSERT INTO items (embedding) VALUES ('[1, 1, 1]'), ('[2, 2, 2]');
+
+SELECT * FROM items;
+```
