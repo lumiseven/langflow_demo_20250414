@@ -80,7 +80,7 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
 ### 2.2 Docker 部署
 
 - 确保已安装 Docker 和 Docker Compose。
-    创建 docker-compose.yml 文件：
+    创建 docker-compose.yml 文件 (参考 docker/dev.docker-compose.yml)：
 
     ```yaml
     version: '3'
