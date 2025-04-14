@@ -309,7 +309,7 @@ docker pull pgvector/pgvector:pg17
 - run container
 
 ```sh
-docker run --name pgvector-db -e POSTGRES_PASSWORD=pgvector --shm-size=1g -p 5433:5432 -d pgvector
+docker run --name pgvector-db -e POSTGRES_PASSWORD=pgvector --shm-size=1g -p 5432:5432 -d pgvector/pgvector:pg17
 ```
 
 - 进入 container
