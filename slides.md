@@ -61,7 +61,8 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
 
 Docker 提供了一种快速部署的方式，适合生产环境或跨平台使用。
 步骤：
-    确保已安装 Docker 和 Docker Compose。
+
+- 确保已安装 Docker 和 Docker Compose。
     创建 docker-compose.yml 文件：
 
     ```yaml
@@ -83,14 +84,14 @@ Docker 提供了一种快速部署的方式，适合生产环境或跨平台使�
         - POSTGRES_DB=langflow
     ```
 
-    运行 Docker Compose：
+- 运行 Docker Compose：
 
     ```bash
     docker-compose up
     ```
 
-    访问 http://localhost:7860，即可使用 Langflow。
-    提示：
+- 访问 http://localhost:7860，即可使用 Langflow。
+- 提示：
     本地安装适合快速体验，容器化 部署更适合生产环境。
     确保网络畅通，首次运行可能需要下载依赖。
 
@@ -166,6 +167,32 @@ RAG（检索增强生成）是 Langflow 的核心优势之一，它能让 AI 从
     - 提示：
       - 确保向量数据库配置正确，Astra DB 提供了便捷的免费试用。
       - 调整 chunk 大小和嵌入模型可优化检索效果。
+
+---
+
+### RAG 简图
+
+### 流程图1：离线将数据源转换为向量
+
+```mermaid
+graph LR
+    A[数据源] --> B[数据预处理]
+    B --> C[文本分块]
+    C --> D[计算Embedding]
+    D --> E[生成向量存储至向量数据库]
+```
+
+### 流程图2：用户提问处理流程
+
+```mermaid
+graph LR
+    A[用户提问] --> B[提问Embedding]
+    B --> C[向量检索]
+    C --> D{相似性计算}
+    D --> E[检索相关信息]
+    E --> F[LLM处理]
+    F --> G[返回响应]
+```
 
 ---
 
