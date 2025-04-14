@@ -292,6 +292,8 @@ timeout = 6000
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 extra-index-url = https://mirrors.aliyun.com/pypi/simple
 trusted-host = pypi.tuna.tsinghua.edu.cn
+[tool.uv]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 ---
