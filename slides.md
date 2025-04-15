@@ -285,7 +285,7 @@ graph LR
 
 ## 附 pip-mirror
 
-```conf
+```txt
 ; pip.conf
 [global]
 timeout = 6000
@@ -295,6 +295,9 @@ trusted-host = pypi.tuna.tsinghua.edu.cn
 [tool.uv]
 index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 ```
+
+---
+zoom: 0.6
 
 ---
 
@@ -333,3 +336,18 @@ INSERT INTO items (embedding) VALUES ('[1, 1, 1]'), ('[2, 2, 2]');
 
 SELECT * FROM items;
 ```
+
+- [配置 pgvector](https://docs.langflow.org/components-vector-stores#pgvector)
+  - 安装依赖项 https://python.langchain.com/docs/integrations/vectorstores/pgvector/
+
+    ```sh
+    pip install -qU langchain_postgres
+    ```
+
+  - connection string 配置连接
+
+    ```txt
+    postgresql+psycopg://postgres:pgvector@192.168.3.103:5432/langflow
+    ```
+
+---
