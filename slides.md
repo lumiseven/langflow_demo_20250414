@@ -264,6 +264,113 @@ graph LR
 
 ---
 
+## 附 pip-mirror
+
+```txt
+; pip.conf
+[global]
+timeout = 6000
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+extra-index-url = https://mirrors.aliyun.com/pypi/simple
+trusted-host = pypi.tuna.tsinghua.edu.cn
+[tool.uv]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+---
+zoom: 0.5
+
+---
+
+## pgvector 安装配置
+
+- 安装
+  - pull image
+
+  ```sh
+  docker pull pgvector/pgvector:pg17
+  ```
+
+  - run container
+
+  ```sh
+  docker run --name pgvector-db -e POSTGRES_PASSWORD=pgvector --shm-size=1g -p 5432:5432 -d pgvector/pgvector:pg17
+  ```
+
+  - 进入 container
+
+  ```sh
+  docker exec -it pgvector-db psql -U postgres
+  ```
+
+  - 启动 vector extension
+
+  ```sql
+  CREATE EXTENSION vector;
+  ```
+
+  - 测试
+
+  ```sql
+  CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3));
+
+  INSERT INTO items (embedding) VALUES ('[1, 1, 1]'), ('[2, 2, 2]');
+
+  SELECT * FROM items;
+  ```
+
+- [配置 pgvector](https://docs.langflow.org/components-vector-stores#pgvector)
+  - 安装依赖项 https://python.langchain.com/docs/integrations/vectorstores/pgvector/
+
+    ```sh
+    pip install -qU langchain-postgres psycopg-binary
+    ```
+
+  - connection string 配置连接
+
+    ```txt
+    postgresql+psycopg://postgres:pgvector@192.168.3.103:5432/langflow
+    ```
+
+  - table: 比如配置 `langflow_t1` 需要注意的是 这里的 `table` 并不是 pg 中的 数据表`table`
+  - 附:
+
+    ```sql
+    -- public.langchain_pg_collection definition
+
+    -- Drop table
+
+    -- DROP TABLE public.langchain_pg_collection;
+
+    CREATE TABLE public.langchain_pg_collection (
+        "name" varchar NULL,
+        cmetadata json NULL,
+        "uuid" uuid NOT NULL,
+        CONSTRAINT langchain_pg_collection_pkey PRIMARY KEY (uuid)
+    );
+    -- public.langchain_pg_embedding definition
+
+    -- Drop table
+
+    -- DROP TABLE public.langchain_pg_embedding;
+
+    CREATE TABLE public.langchain_pg_embedding (
+        collection_id uuid NULL,
+        embedding public.vector NULL,
+        "document" varchar NULL,
+        cmetadata json NULL,
+        custom_id varchar NULL,
+        "uuid" uuid NOT NULL,
+        CONSTRAINT langchain_pg_embedding_pkey PRIMARY KEY (uuid)
+    );
+
+
+    -- public.langchain_pg_embedding foreign keys
+
+    ALTER TABLE public.langchain_pg_embedding ADD CONSTRAINT langchain_pg_embedding_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.langchain_pg_collection("uuid") ON DELETE CASCADE;
+
+---
+
 ### 总结与展望
 
 - 未来展望：
@@ -280,74 +387,5 @@ graph LR
   - Langflow GitHub：https://github.com/langflow-ai/langflow
   - DataStax Astra DB：https://www.datastax.com
   - Langfuse 集成指南：https://langfuse.com
-
----
-
-## 附 pip-mirror
-
-```txt
-; pip.conf
-[global]
-timeout = 6000
-index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-extra-index-url = https://mirrors.aliyun.com/pypi/simple
-trusted-host = pypi.tuna.tsinghua.edu.cn
-[tool.uv]
-index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
----
-zoom: 0.6
-
----
-
-## pgvector
-
-- pull image
-
-```sh
-docker pull pgvector/pgvector:pg17
-```
-
-- run container
-
-```sh
-docker run --name pgvector-db -e POSTGRES_PASSWORD=pgvector --shm-size=1g -p 5432:5432 -d pgvector/pgvector:pg17
-```
-
-- 进入 container
-
-```sh
-docker exec -it pgvector-db psql -U postgres
-```
-
-- 启动 vector extension
-
-```sql
-CREATE EXTENSION vector;
-```
-
-- 测试
-
-```sql
-CREATE TABLE items (id serial PRIMARY KEY, embedding vector(3));
-
-INSERT INTO items (embedding) VALUES ('[1, 1, 1]'), ('[2, 2, 2]');
-
-SELECT * FROM items;
-```
-
-- [配置 pgvector](https://docs.langflow.org/components-vector-stores#pgvector)
-  - 安装依赖项 https://python.langchain.com/docs/integrations/vectorstores/pgvector/
-
-    ```sh
-    pip install -qU langchain_postgres
-    ```
-
-  - connection string 配置连接
-
-    ```txt
-    postgresql+psycopg://postgres:pgvector@192.168.3.103:5432/langflow
-    ```
 
 ---
