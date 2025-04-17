@@ -4,7 +4,6 @@ background: https://cover.sli.dev
 class: text-center
 drawings:
   persist: false
-transition: slide-left
 mdc: true
 
 ---
@@ -137,6 +136,9 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 ### 2.3 Desktop 部署(当前仅支持 MacOS)
 
 ---
+zoom: 0.7
+
+---
 
 ### 简单运行：Hello World 示例
 
@@ -158,6 +160,9 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
     - 在聊天窗口输入“Hello, Langflow!”，机器人将返回类似“Hi! I'm happy to chat with you about Langflow!”的回复。
 - 效果：
   - 这个简单工作流展示了 Langflow 的核心能力：通过拖放和连接组件，快速实现一个功能完整的聊天机器人。无需编写一行代码！
+
+---
+zoom: 0.4
 
 ---
 
@@ -232,6 +237,9 @@ graph LR
 ```
 
 ---
+zoom: 0.4
+
+---
 
 ### 构建完整知识库 Demo：企业级应用
 
@@ -283,7 +291,7 @@ graph LR
 - 部署：将流程导出为 JSON 或 API，集成到企业应用中。
 
 ---
-zoom: 0.5
+zoom: 0.8
 
 ---
 
@@ -323,6 +331,11 @@ zoom: 0.5
 
   SELECT * FROM items;
   ```
+
+---
+zoom: 0.55
+
+---
 
 - [配置 pgvector](https://docs.langflow.org/components-vector-stores#pgvector)
   - 安装依赖项 https://python.langchain.com/docs/integrations/vectorstores/pgvector/
@@ -373,6 +386,10 @@ zoom: 0.5
     -- public.langchain_pg_embedding foreign keys
 
     ALTER TABLE public.langchain_pg_embedding ADD CONSTRAINT langchain_pg_embedding_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.langchain_pg_collection("uuid") ON DELETE CASCADE;
+    ```
+
+---
+zoom: 0.7
 
 ---
 
@@ -381,39 +398,69 @@ zoom: 0.5
 - Publish -> API access
   
   ```python
-    import requests
-    url = "http://127.0.0.1:7860/api/v1/run/bab7bc55-6ffb-48a9-af06-c9a65cd11e60"  # The complete API endpoint URL for this flow
+  import requests
+  url = "http://127.0.0.1:7860/api/v1/run/bab7bc55-6ffb-48a9-af06-c9a65cd11e60"  # The complete API endpoint URL for this flow
 
-    # Request payload configuration
-    payload = {
-        "input_value": "hello world!",  # The input value to be processed by the flow
-        "output_type": "chat",  # Specifies the expected output format
-        "input_type": "chat"  # Specifies the input format
-    }
+  # Request payload configuration
+  payload = {
+      "input_value": "hello world!",  # The input value to be processed by the flow
+      "output_type": "chat",  # Specifies the expected output format
+      "input_type": "chat"  # Specifies the input format
+  }
 
-    # Request headers
-    headers = {
-        "Content-Type": "application/json"
-    }
+  # Request headers
+  headers = {
+      "Content-Type": "application/json"
+  }
 
-    try:
-        # Send API request
-        response = requests.request("POST", url, json=payload, headers=headers)
-        response.raise_for_status()  # Raise exception for bad status codes
+  try:
+      # Send API request
+      response = requests.request("POST", url, json=payload, headers=headers)
+      response.raise_for_status()  # Raise exception for bad status codes
 
-        # Print response
-        print(response.text)
+      # Print response
+      print(response.text)
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error making API request: {e}")
-    except ValueError as e:
-        print(f"Error parsing response: {e}")
+  except requests.exceptions.RequestException as e:
+      print(f"Error making API request: {e}")
+  except ValueError as e:
+      print(f"Error parsing response: {e}")
 
-    ```
+  ```
 
 - stream
   - flow 中 LLM 开启 stream
   - `parameter` 中添加 `stream=true`
+
+---
+zoom: 0.8
+
+---
+
+## [memory 记忆](https://docs.langflow.org/components-memories)
+
+- 这里的记忆并不是指的长期记忆 而是当前 session 的上下文记忆
+- 使用 redis memory
+  - docker run -d --name my-redis -p 6379:6379 redis
+- langflow 中操作
+  - 添加组件：
+    - Redis Chat Memory
+    - Message History
+    - Message Store
+  - 连接组件:
+    - Redis Chat Memory -> Message History -> Parser -> Prompt
+    - Redis Chat Memory -> Message Store -> LLM
+  - 修改 prompt:
+
+    ```txt
+    你是一个友好的助手
+    以下是你与用户的会话记录: 
+    {chat_memory}
+
+    请根据用户输入回答问题: 
+    {user_input}
+
+    ```
 
 ---
 
@@ -437,7 +484,7 @@ zoom: 0.5
 
 ---
 
-### 总结与展望
+## 总结与展望
 
 - 未来展望：
   - 生态扩展：Langflow 正在快速迭代，支持更多 LLM 和数据库。
