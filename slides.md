@@ -9,7 +9,7 @@ mdc: true
 
 ---
 
-# 探索 Langflow：从入门到构建 AI 知识库
+# 探索 Langflow：从入门到构建 AI 知识库(v1.3.3)
 
 Langflow 是一个开源的低代码 AI 开发平台，旨在简化多智能体系统和检索增强生成（RAG）应用的构建过程。本文将带你从 Langflow 的基本介绍开始，逐步深入到安装部署、简单运行，以及通过文档 RAG 和完整知识库的 Demo 展示其实战能力。无论你是 AI 开发新手还是资深从业者，Langflow 都能让你快速上手，释放创造力。
 
@@ -43,25 +43,45 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
 
 ---
 
+## 附 pip-mirror
+
+```txt
+; pip.conf
+[global]
+timeout = 6000
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+extra-index-url = https://mirrors.aliyun.com/pypi/simple
+trusted-host = pypi.tuna.tsinghua.edu.cn
+[tool.uv]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+---
+
 **安装步骤**：
 
 - 安装
-  1. 打开终端，创建虚拟环境（可选但推荐）：
+  1. 打开终端，创建虚拟环境 venv/conda（可选但推荐）：
 
-     ```bash
-     python -m venv langflow_env
-     source langflow_env/bin/activate  # Windows: langflow_env\Scripts\activate
-     ```
+        ```bash
+        python -m venv langflow_env
+        source langflow_env/bin/activate  # Windows: langflow_env\Scripts\activate
+        ```
 
-  2. 使用 pip 安装 Langflow：
+        ```bash
+        conda create -n langflow python=3.12
+        conda activate langflow # 使用 conda
+        ```
 
-    ```bash
-    pip install langflow
-    ```
+  2. 使用 pip/uv 安装 Langflow：
 
-    ```bash
-    uv pip install langflow # 使用 uv 安装
-    ```
+        ```bash
+        pip install langflow
+        ```
+
+        ```bash
+        uv pip install langflow # 使用 uv 安装
+        ```
 
 - 启动 Langflow 服务：
   
@@ -70,7 +90,7 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
     ```
 
     ```bash
-    uv run langflow run # 使用 uv 安装可以使用 uv 启动
+    uv run langflow run # 使用 uv 启动
     ```
 
     打开浏览器，访问 http://localhost:7860，即可进入 Langflow 的可视化界面。
@@ -104,7 +124,7 @@ Langflow 支持本地安装和云端部署，安装过程简单，支持多种�
 - 运行 Docker Compose：
 
     ```bash
-    docker-compose up
+    docker-compose up # 后台运行 `docker-compose up -d`
     ```
 
 - 访问 http://localhost:7860，即可使用 Langflow。
@@ -149,7 +169,7 @@ RAG（检索增强生成）是 Langflow 的核心优势之一，它能让 AI 从
 - 准备：
   - 一份 PDF 文件（例如公司手册或技术文档）。
   - OpenAI API 密钥。
-  - Astra DB 或其他向量数据库（本例使用 Astra DB）。
+  - Astra DB 或其他向量数据库。
 - 步骤：
   - 创建新流程：
     - 在 Langflow 中选择 New Flow > Blank Flow。
@@ -263,21 +283,6 @@ graph LR
 - 部署：将流程导出为 JSON 或 API，集成到企业应用中。
 
 ---
-
-## 附 pip-mirror
-
-```txt
-; pip.conf
-[global]
-timeout = 6000
-index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-extra-index-url = https://mirrors.aliyun.com/pypi/simple
-trusted-host = pypi.tuna.tsinghua.edu.cn
-[tool.uv]
-index-url = https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
----
 zoom: 0.5
 
 ---
@@ -371,6 +376,67 @@ zoom: 0.5
 
 ---
 
+## API 使用
+
+- Publish -> API access
+  
+  ```python
+    import requests
+    url = "http://127.0.0.1:7860/api/v1/run/bab7bc55-6ffb-48a9-af06-c9a65cd11e60"  # The complete API endpoint URL for this flow
+
+    # Request payload configuration
+    payload = {
+        "input_value": "hello world!",  # The input value to be processed by the flow
+        "output_type": "chat",  # Specifies the expected output format
+        "input_type": "chat"  # Specifies the input format
+    }
+
+    # Request headers
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Send API request
+        response = requests.request("POST", url, json=payload, headers=headers)
+        response.raise_for_status()  # Raise exception for bad status codes
+
+        # Print response
+        print(response.text)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error making API request: {e}")
+    except ValueError as e:
+        print(f"Error parsing response: {e}")
+
+    ```
+
+- stream
+  - flow 中 LLM 开启 stream
+  - `parameter` 中添加 `stream=true`
+
+---
+
+## Embed into site 前端聊天机器人组件
+
+- 方便嵌入网站
+- Publish -> Embed into site
+- 编写一个简单的html测试 (cdn 内网 js加载可能会慢 部署时考虑下载到本地)
+
+    ```html
+    <h1>hello</h1>
+    <script
+    src="https://cdn.jsdelivr.net/gh/logspace-ai/langflow-embedded-chat@v1.0.7/dist/build/static/js/bundle.min.js">
+    </script>
+    <langflow-chat
+        window_title="simple hello"
+        flow_id="bab7bc55-6ffb-48a9-af06-c9a65cd11e60"
+        host_url="http://127.0.0.1:7860">
+    </langflow-chat>
+    ```
+
+---
+
 ### 总结与展望
 
 - 未来展望：
@@ -381,7 +447,6 @@ zoom: 0.5
   - 初学者可从简单流程开始，熟悉组件逻辑。
   - 进阶用户可尝试多智能体和复杂 RAG 优化。
   - 关注 Langflow GitHub（https://github.com/langflow-ai/langflow）获取最新更新。
-  - 希望这篇文章能为你的 Langflow 之旅提供启发！快去动手实践，构建属于你的 AI 应用吧！
 - 参考资料：
   - Langflow 官方文档：https://docs.langflow.org
   - Langflow GitHub：https://github.com/langflow-ai/langflow
