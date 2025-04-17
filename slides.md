@@ -58,30 +58,30 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ---
 
-**安装步骤**：
+### pip 安装/部署
 
 - 安装
   1. 打开终端，创建虚拟环境 venv/conda（可选但推荐）：
 
-        ```bash
-        python -m venv langflow_env
-        source langflow_env/bin/activate  # Windows: langflow_env\Scripts\activate
-        ```
+      ```bash
+      python -m venv langflow_env
+      source langflow_env/bin/activate  # Windows: langflow_env\Scripts\activate
+      ```
 
-        ```bash
-        conda create -n langflow python=3.12
-        conda activate langflow # 使用 conda
-        ```
+      ```bash
+      conda create -n langflow python=3.12
+      conda activate langflow # 使用 conda
+      ```
 
   2. 使用 pip/uv 安装 Langflow：
 
-        ```bash
-        pip install langflow
-        ```
+      ```bash
+      pip install langflow
+      ```
 
-        ```bash
-        uv pip install langflow # 使用 uv 安装
-        ```
+      ```bash
+      uv pip install langflow # 使用 uv 安装
+      ```
 
 - 启动 Langflow 服务：
   
@@ -97,28 +97,28 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 
 ---
 
-### 2.2 Docker 部署
+### Docker 部署
 
 - 确保已安装 Docker 和 Docker Compose。
-    创建 docker-compose.yml 文件 (参考 docker/dev.docker-compose.yml)：
+    创建 docker-compose.yml 文件 (参考 docker_example/docker-compose.yml)：
 
     ```yaml
     version: '3'
     services:
-    langflow:
-        image: langflowai/langflow:latest
-        ports:
-        - "7860:7860"
-        environment:
-        - LANGFLOW_DATABASE_URL=postgresql://postgres:postgres@postgres:5432/langflow
-        depends_on:
-        - postgres
-    postgres:
-        image: postgres:latest
-        environment:
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
-        - POSTGRES_DB=langflow
+      langflow:
+          image: langflowai/langflow:latest
+          ports:
+          - "7860:7860"
+          environment:
+          - LANGFLOW_DATABASE_URL=postgresql://postgres:postgres@postgres:5432/langflow
+          depends_on:
+          - postgres
+      postgres:
+          image: postgres:latest
+          environment:
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - POSTGRES_DB=langflow
     ```
 
 - 运行 Docker Compose：
