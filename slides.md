@@ -498,6 +498,5 @@ zoom: 0.8
   - Langflow 官方文档：https://docs.langflow.org
   - Langflow GitHub：https://github.com/langflow-ai/langflow
   - DataStax Astra DB：https://www.datastax.com
-  - Langfuse 集成指南：https://langfuse.com
 
 ---
