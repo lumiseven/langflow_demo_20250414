@@ -28,18 +28,27 @@ jobs:
       - name: Setup @antfu/ni
         run: npm i -g @antfu/ni
 
+      - name: Init slidev
+        run: |
+          npm init -y slidev@latest slidev
+          mv slides.md slidev/
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd slidev
+          npm install
 
       - name: Build
-        run: nr build --base /${{github.event.repository.name}}/
+        run: |
+          cd slidev
+          nr build --base /${{github.event.repository.name}}/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: slidev/dist
 
   deploy:
     environment:
